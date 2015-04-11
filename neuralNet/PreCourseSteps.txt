@@ -5,43 +5,44 @@ PreCourse Steps:
 A. Download the Kaggle data: https://www.kaggle.com/c/GiveMeSomeCredit/download/cs-training.csv
   1. Move this file to your Desktop. 
 B. Load into a MySQL database
-  1. `which mysql` to verify you have mysql installed. If you don't, `brew install mysql`.
+  1. In your terminal: `which mysql` to verify you have mysql installed. If you don't, `brew install mysql`.
   2. Start mysql server: 'mysql.server start'
-  3. Enter mysql from your command line: 'mysql -u root'. Add the -p password flag if necessary: 'mysql -u root -p'. This will prompt you for your password on the next line.
+  3. Enter mysql from your command line: 'mysql -u root'. Add the -p password flag if you have a password set up: 'mysql -u root -p'. This will prompt you for your password on the next line.
   4. Create a database to load this file into:
-    a) `SHOW DATABSES`
-    b) `CREATE DATABASE machineWorks`
-    c) `SHOW DATABASES`
-    d) `USE machineWorks` will switch into using the newly created database
+    a) `SHOW DATABASES;`
+    b) `CREATE DATABASE learningMachines;`
+    c) `SHOW DATABASES;` to verify it worked
+    d) `USE learningMachines;` will switch into using the newly created database
   5. Create the table that you'll be loading the data into:
     a) This will create a table with all the right columns, and the right format for each column
     b) `CREATE TABLE IF NOT EXISTS neuralNet (
         id int NOT NULL AUTO_INCREMENT,
-        seriousDlqin2yrs int,
-        revolvingUtilizationOfUnsecuredLines float,
+        seriousDelinquency int,
+        creditUtilization float,
         age int,
-        NumberOfTime30To59DaysPastDueNotWorse int,
+        30To60DaysLate int,
         DebtRatio float,
         MonthlyIncome int,
-        NumberOfOpenCreditLinesAndLoans int,
-        NumberOfTimes90DaysLate int,
-        NumberRealEstateLoansOrLines int,
-        NumberOfTime60To89DaysPastDueNotWorse int,
+        NumberOfOpenCreditLines int,
+        90DaysLate int,
+        NumberOfRealEstateLoansOrLines int,
+        60To89DaysLate int,
         NumberOfDependents int,
         PRIMARY KEY (id)
       );`
-    c) `SHOW TABLES`
-    d) `DESCRIBE neuralNet`
+    c) `SHOW TABLES;` should show neuralNet as a table
+    d) `DESCRIBE neuralNet;`
   6. Load data from the download to the table you just created:
     a) Clean the data:
         1) Replace all ",NA" with ",0"
         2) Investigate your line endings. Some programs will save in an odd format by default. In Sublime Text, got to View, Line Endings, and then click on Unix. That will switch it to being what we'd expect to see, i.e., '\n'
-    b) `LOAD DATA INFILE '/Users/preston/Desktop/machineWork/cs-training.csv' 
-        INTO TABLE neuralNet 
-        FIELDS TERMINATED BY ',' 
-        ENCLOSED BY '"'
-        LINES TERMINATED BY '\n'
-        IGNORE 1 ROWS;`
+    b) Back in your MySQL command prompt: 
+        `LOAD DATA INFILE '/Users/preston/Desktop/cs-training.csv'
+            INTO TABLE neuralNet 
+            FIELDS TERMINATED BY ',' 
+            ENCLOSED BY '"'
+            LINES TERMINATED BY '\n'
+            IGNORE 1 ROWS;`
     c) Verify the data has loaded correctly:
         1) `SELECT * FROM neuralNet LIMIT 15;` Should look like the fist 15 rows of your data
         2) `SELECT COUNT(id) FROM neuralNet;` Should return 150,000
