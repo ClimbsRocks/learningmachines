@@ -1,9 +1,10 @@
 var db = require('../db');
 var path = require('path');
 var fs = require('fs');
+//This line effectively means we've placed the "brain" object that brain.js gives us into the usable scope for this file. We have not yet done anything with that object- that's your task!
 var brain = require('brain');
 
-//TODO: your code here
+//TODO: your code here to create a new neural net instance
 
 
 module.exports = {
