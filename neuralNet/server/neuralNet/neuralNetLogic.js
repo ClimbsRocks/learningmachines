@@ -13,14 +13,18 @@ var net = new brain.NeuralNetwork({
 
 
 module.exports = {
+  // this is our main entry point
   startNet: function(req,res) {
+    // grab all the data from the db
     db.query('SELECT * FROM neuralNet', function(err, response) {
       if(err) {
         console.error(err);
       } else {
+        // format that data. see that modular function below
         var formattedData = module.exports.formatData(response);
         var training = [];
         var testing = [];
+        // split the data into a test set (20% of the data) and a training set (80% of the data)
         for(var i = 0; i < formattedData.length; i++) {
           if(Math.random() > .8) {
             training.push(formattedData[i]);
@@ -28,6 +32,7 @@ module.exports = {
             testing.push(formattedData[i]);
           }
         }
+        // pass this formatted data into trainBrain
         module.exports.trainBrain(training, testing);
       }
     });
@@ -47,13 +52,14 @@ module.exports = {
       learningRate: 0.3    // learning rate
     });
 
-    var jsonBackup = net.toJSON();
-    var runBackup = net.toFunction();
-
-    module.exports.writeBrain(jsonBackup);
-
     console.timeEnd('trainBrain');
 
+    // once we've trained the brain, write it to json to back it up
+    var jsonBackup = net.toJSON();
+    var runBackup = net.toFunction();
+    module.exports.writeBrain(jsonBackup);
+
+    // now test the results and see how our machine did!
     module.exports.testBrain(testingData);
   },
 
@@ -85,6 +91,11 @@ module.exports = {
       testData[i].output = net.run(testData[i].input);
     }
 
+    // everything below is formatting the output
+    // first we create a results obj with keys labeled 0 to 100
+    // eash position in results is an object itself
+      // Each position aggregates the count of loans the neural net has predicted have this level of risk
+      // and the number of observed defaults at that level of risk
     var results = {};
     for(var j = 0; j <=100; j++) {
       results[j] = {
@@ -96,7 +107,7 @@ module.exports = {
     for(var i = 0; i < testData.length; i++) {
       //we format the net's prediction to be a number between 0 and 100
       var prediction = Math.round( testData[i].output.defaulted * 100);
-      //We then increment the total number of cases that the net predicts exist at this level
+      //We then increment the total number of cases that the net predicts exist at this level of risk
       results[prediction].nnCount++;
       //And whether this input resulted in a default or not
       results[prediction].defaulted += testData[i].output.defaulted;
