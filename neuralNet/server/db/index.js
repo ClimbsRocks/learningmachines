@@ -5,6 +5,4 @@ var dbConnection = mysql.createConnection({
   database: 'learningMachines'
 });
 
-// dbConnection.connect();
-
 module.exports = dbConnection;
