@@ -50,7 +50,7 @@ C. Create a node.js server to do three things: Load data from MySQL db, process 
   1. If you're familiar with Node.js, try using my server as an inspiration to build your own
   2. If you're not familiar with Node.js, fork and clone my repo
     a) Go to https://github.com/ClimbsRocks/machineWork and click Fork in the upper right. 
-    b) `cd ~/Desktop` changes directory to the Desktop
+    b) `cd ~/Desktop` changes directory to the Desktop. Feel free to use whichever directory you want.
     b) `git clone https://github.com/YOUR_USERNAME_HERE/machineWork` creates a folder on your Desktop that is a clone of your fork
     c) `cd mahineWork` changes the directory into that folder
     d) `subl .` to open up the folder in sublime, assuming you have the subl command installed
