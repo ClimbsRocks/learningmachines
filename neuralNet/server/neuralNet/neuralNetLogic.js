@@ -14,7 +14,7 @@ var net = new brain.NeuralNetwork({
 
 module.exports = {
   startNet: function(req,res) {
-    db.query('SELECT * FROM training', function(err, response) {
+    db.query('SELECT * FROM neuralNet', function(err, response) {
       if(err) {
         console.error(err);
       } else {
@@ -136,17 +136,17 @@ module.exports = {
       }
 
       obs.input.age = item.age/109;
-      obs.input.thirtyDaysLate = item.30To60DaysLate/98;
-      obs.input.monthlyIncome = Math.sqrt(item.MonthlyIncome)/1735;
+      obs.input.thirtyDaysLate = item['30To60DaysLate'] / 98;
+      obs.input.monthlyIncome = Math.sqrt(item.MonthlyIncome) / 1735;
       obs.input.openCreditLines = Math.sqrt(item.NumberOfOpenCreditLines)/8;
 
-      obs.input.ninetyDaysLate = Math.sqrt(item.90DaysLate)/10;
+      obs.input.ninetyDaysLate = Math.sqrt(item['90DaysLate']) / 10;
 
-      obs.input.realEstateLines = item.NumberOfRealEstateLoansOrLines/54;
+      obs.input.realEstateLines = item.NumberOfRealEstateLoansOrLines/ 54;
 
-      obs.input.sixtyDaysLate = Math.sqrt(item.60To89DaysLate)/10;
+      obs.input.sixtyDaysLate = Math.sqrt(item['60To89DaysLate']) / 10;
 
-      obs.input.numDependents = Math.sqrt(item.NumberOfDependents)/5;
+      obs.input.numDependents = Math.sqrt(item.NumberOfDependents) / 5;
 
       formattedResults.push(obs);
     }
