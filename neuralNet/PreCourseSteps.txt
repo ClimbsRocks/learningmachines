@@ -54,10 +54,10 @@ C. Create a node.js server to do three things: Load data from MySQL db, process 
     b) `git clone https://github.com/YOUR_USERNAME_HERE/learningMachines` creates a folder on your Desktop that is a clone of your fork
     c) `cd learningmachines` changes the directory into that folder
     d) `subl .` to open up the folder in sublime, assuming you have the subl command installed
-    e) Back in the terminal: `cd neuralNet`
+    e) Back in the terminal: `cd neuralNet`, and then `cd server`
     f) `npm install`. If this gives you an error, try `sudo npm install`
-    g) `nodemon --max-old-space-size=3000 server/server.js`. This line does three things: it starts your node server based on the path you give it from the current directory (server/server.js). It starts nodemon on it, which means it will restart whenever you make a change to any file in the server directory. It allocates 3000 MB of memory to node, so that it doesn't crash if node runs over the 1.76 GB typically allocated to Node.js. You can adjust this number based on your system's capabilities and the problem you're solving.
-    h) you can now make api calls to this server, either through your browser (http://localhost:5000/neuralNet/startNeuralNet), or through curl on your command line `curl localhost:5000/neuralNet/startNeuralNet`
+    g) `nodemon --max-old-space-size=3000 server.js`. This line does three things: it starts your node server based on the path you give it from the current directory (server.js). It starts nodemon on it, which means it will restart whenever you make a change to any file in the server directory. It allocates 3000 MB of memory to node, so that it doesn't crash if node runs over the 1.76 GB typically allocated to Node.js. You can adjust this number based on your system's capabilities and the problem you're solving.
+    h) You can now make api calls to this server, either through your browser (http://localhost:5000/neuralNet/startNeuralNet), or through curl on your command line `curl localhost:5000/neuralNet/startNeuralNet`
     i) You now have a running node server on your computer, with all the right dependencies installed!
 D. The key files in our node server are in the neuralNet folder. neuralNetRouter.js is where you need to add in any new API endpoints you might create so that the server knows where to direct them, and neuralNetLogic.js is where we have all the actual JS logic built out. 
 
