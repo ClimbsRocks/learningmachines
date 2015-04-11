@@ -2,7 +2,7 @@ var mysql = require('mysql');
 
 var dbConnection = mysql.createConnection({
   user: 'root',
-  database: 'nnCredit'
+  database: 'learningMachines'
 });
 
 // dbConnection.connect();
