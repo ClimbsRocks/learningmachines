@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var helpers = require('./helpers.js'); // our custom middleware
 var morgan = require('morgan'); // used for logging incoming request
-var dataProcessingRouter = require('../dataProcessing/dataProcessingRouter.js');
+var neuralNetRouter = require('../neuralNet/neuralNetRouter.js');
 
 module.exports = function(app, express) {
   app.use(morgan('dev'));
@@ -15,6 +15,6 @@ module.exports = function(app, express) {
   app.use(helpers.errorLogger);
   app.use(helpers.errorHandler);
   // app.use(express.static(path.join(__dirname + '../../../dist')));
-  // dataProcessing router is for all our internal data processing, and is only used once when we import the data
-  app.use('/dataProcessing', dataProcessingRouter);
+  // neuralNet router is where we're keeping all of our api endpoints for the neural net. This lets us extend the server to include other machine learning algorithms under their own api endpoints
+  app.use('/neuralNet', neuralNetRouter);
 };

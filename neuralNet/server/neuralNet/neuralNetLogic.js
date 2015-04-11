@@ -51,7 +51,7 @@ module.exports = {
     console.time('trainBrain');
     console.log('Training your very own Brain');
 
-    //TODO: Your code here
+    //TODO: Your code here to train the neural net
 
     var jsonBackup = net.toJSON();
     var runBackup = net.toFunction();
@@ -66,6 +66,7 @@ module.exports = {
   //Test our brain with a given set of testData
   //Logs the output of default rate at that prediction level
   testBrain: function(testData) {
+    //console.time gives us the time it takes to complete a task
     console.time('testBrain');
     //TODO: Your code here to get the predicted values for everything in our testData
     //The logging code below expects the predicted net values to be stored as properties on each item in testData under the property name output. 
