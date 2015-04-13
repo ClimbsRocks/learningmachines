@@ -7,7 +7,7 @@ var brain = require('brain');
 //TODO: your code here to create a new neural net instance
 // SOLUTION CODE BELOW
 var net = new brain.NeuralNetwork({
-  hiddenLayers:[200, 200], //Use the docs to explore various numbers you might want to use here
+  hiddenLayers:[200,200,200], //Use the docs to explore various numbers you might want to use here
   learningRate:0.3
 });
 
@@ -27,9 +27,9 @@ module.exports = {
         // split the data into a test set (20% of the data) and a training set (80% of the data)
         for(var i = 0; i < formattedData.length; i++) {
           if(Math.random() > .8) {
-            training.push(formattedData[i]);
-          } else {
             testing.push(formattedData[i]);
+          } else {
+            training.push(formattedData[i]);
           }
         }
         // pass this formatted data into trainBrain
@@ -56,6 +56,7 @@ module.exports = {
 
     // once we've trained the brain, write it to json to back it up
     var jsonBackup = net.toJSON();
+    console.log(jsonBackup);
     var runBackup = net.toFunction();
     module.exports.writeBrain(jsonBackup);
 
@@ -69,8 +70,8 @@ module.exports = {
     //console.time gives us the time it takes to complete a task
     console.time('testBrain');
     //TODO: Your code here to get the predicted values for everything in our testData
-    //The logging code below expects the predicted net values to be stored as properties on each item in testData under the property name output. 
-    //Here's what an object in the testData array should look like:
+    //The logging code provided for you below expects the predicted net values to be stored as properties on each item in testData under the property name nnPredictions. 
+    //Here's what an object in the testData array should look like after you've gotten the predicted result from the net:
       /*
       { input: 
          { utilizationRate: 0.21939333333333333,
@@ -88,7 +89,7 @@ module.exports = {
 
     // SOLUTION CODE BELOW
     for(var i = 0; i < testData.length; i++) {
-      testData[i].output = net.run(testData[i].input);
+      testData[i].nnPredictions = net.run(testData[i].input);
     }
 
     // everything below is formatting the output
@@ -105,15 +106,16 @@ module.exports = {
     }
 
     for(var i = 0; i < testData.length; i++) {
-      //we format the net's prediction to be a number between 0 and 100
-      var prediction = Math.round( testData[i].output.defaulted * 100);
-      //We then increment the total number of cases that the net predicts exist at this level of risk
+      //we format the net's prediction to be an int between 0 and 100
+      var prediction = Math.round( testData[i].nnPredictions.defaulted * 100);
+      //We then increment the total number of cases that the net predicts exist at this level of risk 
+      // (i.e., if the net's prediction for a given input is .38745, we would add one more to the 39 category, since we now have one more observation that the net has predicted has a 39% chance of defaulting)
       results[prediction].nnCount++;
       //And whether this input resulted in a default or not
       results[prediction].defaulted += testData[i].output.defaulted;
     }
 
-    //We don't like to assume the keys are going to be ordered, but it's a time-saving shortcut to make at the moment.
+    //We don't like to assume the keys are going to be ordered, but it's a time-saving shortcut to make at the moment, and the consequences are very low if it's not perfectly ordered
     for(var key in results) {
       console.log(key + '- nnCount: ' + results[key].nnCount + ' defaulted: ' + results[key].defaulted + ' Default Rate: ' + results[key].defaulted/results[key].nnCount);
     }
@@ -126,7 +128,6 @@ module.exports = {
   //You can ignore this until extra credit
   formatData: function(data) {
 
-    //TODO: SOLUTION CODE BELOW
     console.log('formatting Data');
     var formattedResults = [];
     for(var i = 0; i < data.length; i++) {
