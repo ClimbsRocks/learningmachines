@@ -7,7 +7,7 @@ var brain = require('brain');
 //TODO: your code here to create a new neural net instance
 // SOLUTION CODE BELOW
 var net = new brain.NeuralNetwork({
-  hiddenLayers:[200,200,200], //Use the docs to explore various numbers you might want to use here
+  hiddenLayers:[10], //Use the docs to explore various numbers you might want to use here
   learningRate:0.3
 });
 
@@ -46,7 +46,7 @@ module.exports = {
     // SOLUTION CODE BELOW:
     net.train(trainingData,{
       errorThresh: 0.05,  // error threshold to reach
-      iterations: 10,   // maximum training iterations
+      iterations: 10000,   // maximum training iterations
       log: true,           // console.log() progress periodically
       logPeriod: 1,       // number of iterations between logging
       learningRate: 0.3    // learning rate
@@ -117,7 +117,7 @@ module.exports = {
 
     //We don't like to assume the keys are going to be ordered, but it's a time-saving shortcut to make at the moment, and the consequences are very low if it's not perfectly ordered
     for(var key in results) {
-      console.log(key + '- nnCount: ' + results[key].nnCount + ' defaulted: ' + results[key].defaulted + ' Default Rate: ' + results[key].defaulted/results[key].nnCount);
+      console.log(key + '- nnCount: ' + results[key].nnCount + ' defaulted: ' + results[key].defaulted + ' Default Rate: ' + Math.round(results[key].defaulted/results[key].nnCount * 100) + '%' );
     }
     console.timeEnd('testBrain');
 
@@ -134,6 +134,7 @@ module.exports = {
       var item = data[i];
 
       var obs = {};
+      obs.id = item.id;
       obs.input = {};
       obs.output = {
         defaulted: item.seriousDelinquency
@@ -169,9 +170,10 @@ module.exports = {
 
   //Writes the neural net to a file for backup
   //You can ignore this 
-  writeBrain: function(json) {
+  writeBrain: function(backupJson) {
     var fileName = 'hiddenLayers' + net.hiddenSizes + 'learningRate' + net.learningRate + new Date().getTime();
-    fs.writeFile(fileName, json, function(err) {
+    console.log(backupJson);
+    fs.writeFile(fileName, JSON.stringify(backupJson), function(err) {
       if(err) {
         console.error('sad, did not write to file');
       } else {
@@ -195,6 +197,33 @@ module.exports = {
             net.fromJSON(JSON.parse(data));
             res.send('Loaded the brain! Testing it now.')
             module.exports.testBrain(formattedData);
+          }
+        });
+
+      }
+    });
+  },
+
+  kagglePredict: function(req, res) {
+    db.query('SELECT * FROM submission', function(err, response) {
+      if(err) {
+        console.error(err);
+      } else {
+        var formattedData = module.exports.formatData(response);
+        fs.readFile('hiddenLayers10learningRate0.31428966125595', 'utf8', function(err, data) {
+          if(err) {
+            console.error(err);
+          } else {
+            net.fromJSON(JSON.parse(data));
+            res.send('Loaded the brain! Testing it now.')
+            var results = [];
+            for (var i = 0; i < formattedData.length; i++) {
+              results. push(formattedData[i].id);
+              results.push(net.run(formattedData[i].input).defaulted);
+              results.push('\n');
+            }
+            console.log(results.join(','));
+            // module.exports.testBrain(formattedData);
           }
         });
 
