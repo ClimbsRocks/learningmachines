@@ -155,7 +155,7 @@ module.exports = {
   //You can ignore this 
   writeBrain: function(json) {
     var fileName = 'hiddenLayers' + net.hiddenSizes + 'learningRate' + net.learningRate + new Date().getTime();
-    fs.writeFile(fileName, json, function(err) {
+    fs.writeFile(fileName, JSON.stringify(json), function(err) {
       if(err) {
         console.error('sad, did not write to file');
       } else {
