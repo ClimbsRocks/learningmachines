@@ -101,7 +101,7 @@ module.exports = {
 
     //We don't like to assume the keys are going to be ordered, but it's a time-saving shortcut to make at the moment, and the consequences are very low if it's not perfectly ordered
     for(var key in results) {
-      console.log(key + '- nnCount: ' + results[key].nnCount + ' defaulted: ' + results[key].defaulted + ' Default Rate: ' + results[key].defaulted/results[key].nnCount);
+      console.log(key + '- nnCount: ' + results[key].nnCount + ' defaulted: ' + results[key].defaulted + ' Default Rate: ' + Math.round(results[key].defaulted/results[key].nnCount * 100) );
     }
     console.timeEnd('testBrain');
 
