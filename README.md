@@ -54,10 +54,14 @@ PreCourse Steps:
     1. `cd learningmachines` changes the directory into that folder
     2. `subl .` to open up the folder in sublime, assuming you have the subl command installed
     3. Back in the terminal: `cd neuralNet`, and then `cd server`
-    4. `npm install`. If this gives you an error, try `sudo npm install`
-    5. `nodemon --max-old-space-size=3000 server.js`. This line does three things: it starts your node server based on the path you give it from the current directory (server.js). It starts nodemon on it, which means it will restart whenever you make a change to any file in the server directory. It allocates 3000 MB of memory to node, so that it doesn't crash if node runs over the 1.76 GB typically allocated to Node.js. You can adjust this number based on your system's capabilities and the problem you're solving.
-    6. You can now make api calls to this server, either through your browser (http://localhost:5000/neuralNet/startNeuralNet), or through curl on your command line `curl localhost:5000/neuralNet/startNeuralNet`
-    7. You now have a running node server on your computer, with all the right dependencies installed!
+    4. `npm install`. If this gives you an error, try `sudo npm install`. If you're still getting an error, make sure node is installed with `which node` and `brew install node` like we did for MySQL above.
+    5. If you haven't already, install nodemon with `npm install -g nodemon`. Nodemon is a handy utility that will restart node whenever you make a change to any file in the server directory.
+    7. Start your server with `nodemon --max-old-space-size=3000 server.js`. This line does three things:
+      - It starts your node server based on the path you give it from the current directory (server.js)
+      - It starts nodemon on it, watching for any file changes. 
+      - It allocates 3000 MB of memory to node, so that it doesn't crash if node runs over the 1.76 GB typically allocated to Node.js. You can adjust this number based on your system's capabilities and the problem you're solving.
+    8. You can now make api calls to this server, either through your browser (http://localhost:5000/neuralNet/startNeuralNet), or through curl on your command line `curl localhost:5000/neuralNet/startNeuralNet`
+    9. You now have a running node server on your computer, with all the right dependencies installed!
 * **The key files in our node server are in the neuralNet folder.**
   1. neuralNetLogic.js is where we have all the actual JS logic built out. 
 
