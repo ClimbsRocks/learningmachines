@@ -23,4 +23,9 @@ neuralNetRouter.get('/kagglePredict', function(req, res) {
   neuralNetLogic.kagglePredict(req, res);
 });
 
+neuralNetRouter.get('/kaggleTrain', function(req, res) {
+  console.log('heard a request to kaggleTrain');
+  neuralNetLogic.kaggleTrain(req, res);
+});
+
 module.exports = neuralNetRouter;
