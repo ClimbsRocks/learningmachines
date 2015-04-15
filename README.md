@@ -56,7 +56,7 @@ PreCourse Steps:
     3. Back in the terminal: `cd neuralNet`, and then `cd server`
     4. `npm install`. If this gives you an error, try `sudo npm install`
     5. `nodemon --max-old-space-size=3000 server.js`. This line does three things: it starts your node server based on the path you give it from the current directory (server.js). It starts nodemon on it, which means it will restart whenever you make a change to any file in the server directory. It allocates 3000 MB of memory to node, so that it doesn't crash if node runs over the 1.76 GB typically allocated to Node.js. You can adjust this number based on your system's capabilities and the problem you're solving.
-    6. You can now make api calls to this server, either through your browser (http://localhost:5000/neuralNet/startNeuralNet), or through curl on your command line `curl localhost:5000/neuralNet/startNeuralNet`
+    6. You can now make api calls to this server, either through your browser (http://localhost:5000/neuralNet/startNet), or through curl on your command line `curl localhost:5000/neuralNet/startNet`
     7. You now have a running node server on your computer, with all the right dependencies installed!
 * **The key files in our node server are in the neuralNet folder.**
   1. neuralNetLogic.js is where we have all the actual JS logic built out. 
