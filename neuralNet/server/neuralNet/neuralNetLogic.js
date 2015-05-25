@@ -1,18 +1,67 @@
 var db = require('../db');
 var path = require('path');
 var fs = require('fs');
+var Parallel = require('paralleljs');
+var kpComplete = require('../../../../kpComplete/kpLib.js');
 //This line effectively means we've placed the "brain" object that brain.js gives us into the usable scope for this file. We have not yet done anything with that object- that's your task!
 var brain = require('brain');
 
 //TODO: your code here to create a new neural net instance
 // SOLUTION CODE BELOW
 var net = new brain.NeuralNetwork({
-  hiddenLayers:[200,200,20], //Use the docs to explore various numbers you might want to use here
-  learningRate:0.3
+  hiddenLayers:[20,20], //Use the docs to explore various numbers you might want to use here
+  learningRate:0.6
 });
+
+// var bestNet = {
+//   jsonBackup: '',
+//   errorRate: 1,
+//   trainingTime: Infinity
+// };
+
 
 
 module.exports = {
+  // parallelNets: function(hlNum, trainingData) {
+  //   console.log('parallelNets with',hlNum);
+  //   var hlArray = [];
+  //   for(var i = 0; i < hlNum; i++) {
+  //     // TODO: build out logic for how many nodes to put in each hidden layer
+  //     hlArray.push(10);
+  //   }
+  //   var net = new brain.NeuralNetwork({
+  //     hiddenLayers: hlArray, //Use the docs to explore various numbers you might want to use here
+  //     learningRate: 0.6
+  //   });
+  //   var trainingResults = net.train(trainingData, {
+  //     errorThresh: 0.05,  // error threshold to reach
+  //     iterations: 10,   // maximum training iterations
+  //     log: true,           // console.log() progress periodically
+  //     logPeriod: 1,       // number of iterations between logging
+  //     learningRate: 0.3    // learning rate
+  //   });
+  //   //do some kind of returning or result logging
+  //   // capture the final error rate. 
+  //   console.log('trainingResults is:',trainingResults);
+  //   module.exports.bestNetChecker(trainingResults,net);
+  // },
+  // bestNetChecker: function(trainingResults,trainedNet) {
+  //   console.log('checking if this is the best net');
+  //   if(trainingResults.error < bestNet.errorRate) {
+  //     //TODO: make this the best net
+  //     bestNet.jsonBackup = trainedNet.toJSON();
+  //     bestNet.errorRate = trainingResults.error;
+  //   }
+  //   //check against our global bestNet
+  //   console.log('bestNet now is:',bestNet);
+  // },
+  // multipleNetAlgo: function(trainingData) {
+  //   console.log('inside multipleNetAlgo');
+  //   //create logic for training as many nets as we need. 
+  //   for(var i = 3; i > 0; i--) {
+  //     module.exports.parallelNets(i, trainingData);
+  //   }
+  // },
   // this is our main entry point
   startNet: function(req,res) {
     // grab all the data from the db
@@ -32,8 +81,44 @@ module.exports = {
             training.push(formattedData[i]);
           }
         }
+        // var p = new Parallel(training,{ evalPath: 'server/node_modules/paralleljs/lib/eval.js' });
+        // console.log('about to spawn');
+        // p.spawn(function(data) {
+        //   console.log('inside first spawn');
+        //   var net2 = new brain.NeuralNetwork({
+        //     hiddenLayers:[20,20], //Use the docs to explore various numbers you might want to use here
+        //     learningRate:0.6
+        //   });
+        //   net2.train(data,{
+        //         errorThresh: 0.05,  // error threshold to reach
+        //         iterations: 10,   // maximum training iterations
+        //         log: true,           // console.log() progress periodically
+        //         logPeriod: 1,       // number of iterations between logging
+        //         learningRate: 0.3    // learning rate
+        //       });
+        // }).then(function(data) {
+        //   console.log('ended first spawn');
+        // });
+        // p.spawn(function(data) {
+        //   console.log('inside second spawn');
+        //   var net3 = new brain.NeuralNetwork({
+        //     hiddenLayers:[20,20], //Use the docs to explore various numbers you might want to use here
+        //     learningRate:0.6
+        //   });
+        //   net3.train(data,{
+        //         errorThresh: 0.05,  // error threshold to reach
+        //         iterations: 10,   // maximum training iterations
+        //         log: true,           // console.log() progress periodically
+        //         logPeriod: 1,       // number of iterations between logging
+        //         learningRate: 0.6    // learning rate
+        //       });
+        // }).then(function(data) {
+        //   console.log('ended second spawn');
+        // });
+        // console.log('ended spawn, this is where we would normally call trainBrain');
         // pass this formatted data into trainBrain
-        module.exports.trainBrain(training, testing);
+        // module.exports.trainBrain(training, testing);
+        kpComplete.train(training);
       }
     });
   },
@@ -46,7 +131,7 @@ module.exports = {
     // SOLUTION CODE BELOW:
     var writeInfo = net.train(trainingData,{
       errorThresh: 0.05,  // error threshold to reach
-      iterations: 1000,   // maximum training iterations
+      iterations: 10,   // maximum training iterations
       log: true,           // console.log() progress periodically
       logPeriod: 1,       // number of iterations between logging
       learningRate: 0.3    // learning rate
