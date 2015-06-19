@@ -118,7 +118,7 @@ module.exports = {
         // console.log('ended spawn, this is where we would normally call trainBrain');
         // pass this formatted data into trainBrain
         // module.exports.trainBrain(training, testing);
-        kpComplete.train(training);
+        kpComplete.readFile('./kpComplete/kaggleTrainingData.csv');
       }
     });
   },
