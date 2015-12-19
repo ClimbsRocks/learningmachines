@@ -73,3 +73,4 @@ Here are the things I expect you to do
 
 * **Fantasy Mode**
   1. Parallelize the training of multiple nets at the same time. Training each net is synchronous, so parallelizing won't help you train a single net any faster. But you could try creating multiple versions that have different parameters (number of nodes, hidden layers, learning rate, etc.) and train those in parallel with each other. 
+
