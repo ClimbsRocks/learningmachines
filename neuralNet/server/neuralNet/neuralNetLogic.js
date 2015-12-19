@@ -11,7 +11,6 @@ var net = new brain.NeuralNetwork({
   learningRate:0.6
 });
 
-
 module.exports = {
   // this is our main entry point
   startNet: function(req,res) {
@@ -32,6 +31,8 @@ module.exports = {
             training.push(formattedData[i]);
           }
         }
+        // pass this formatted data into trainBrain
+        module.exports.trainBrain(training, testing);
       }
     });
   },
@@ -50,14 +51,12 @@ module.exports = {
       learningRate: 0.3    // learning rate
     });
 
-    console.log('writeInfo', writeInfo);
-
     console.timeEnd('trainBrain');
 
     // once we've trained the brain, write it to json to back it up
     var jsonBackup = net.toJSON();
     var runBackup = net.toFunction();
-    module.exports.writeBrain(jsonBackup, writeInfo);
+    module.exports.writeBrain(jsonBackup);
 
     // now test the results and see how our machine did!
     module.exports.testBrain(testingData);
@@ -169,12 +168,10 @@ module.exports = {
 
   //Writes the neural net to a file for backup
   //You can ignore this 
-  writeBrain: function(backupJson, info) {
-    console.log('net inside writeBrain');
-    console.log(net)
-    info = info ? info : ''
-    var fileName = 'hiddenLayers' + net.hiddenSizes + 'learningRate' + net.learningRate + new Date().getTime(); //add in iterations and observed error
-    fs.writeFile(fileName, JSON.stringify(backupJson), function(err) {
+  writeBrain: function(json) {
+    // give each of our fileNames some unique information so we know what type of net this was
+    var fileName = 'hiddenLayers' + net.hiddenSizes + 'learningRate' + net.learningRate + new Date().getTime();
+    fs.writeFile(fileName, JSON.stringify(json), function(err) {
       if(err) {
         console.error('sad, did not write to file');
       } else {
