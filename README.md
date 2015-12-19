@@ -74,3 +74,4 @@ Here are the things I expect you to do
 * **Fantasy Mode**
   1. Parallelize the training of multiple nets at the same time. Training each net is synchronous, so parallelizing won't help you train a single net any faster. But you could try creating multiple versions that have different parameters (number of nodes, hidden layers, learning rate, etc.) and train those in parallel with each other. 
 
+  Trying different combinations of hyperparameters (the parameters that determine the shape or conditions of the algorithm, such as number of nodes, or number of hidden layers) to find the optimal set is called grid search. scikit-learn has a [good module explaining and implementing grid search](http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html).
