@@ -5,12 +5,6 @@ var fs = require('fs');
 var brain = require('brain');
 
 //TODO: your code here to create a new neural net instance
-// START SOLUTION CODE
-var net = new brain.NeuralNetwork({
-  hiddenLayers:[20,20], //Use the docs to explore various numbers you might want to use here
-  learningRate:0.6
-});
-//  END SOLUTION CODE
 
 module.exports = {
   // this is our main entry point
@@ -43,16 +37,6 @@ module.exports = {
     console.log('Training your very own Brain');
 
     //TODO: Your code here to train the neural net
-    // START SOLUTION CODE:
-    var writeInfo = net.train(trainingData,{
-      errorThresh: 0.05,  // error threshold to reach
-      iterations: 10,   // maximum training iterations
-      log: true,           // console.log() progress periodically
-      logPeriod: 1,       // number of iterations between logging
-      learningRate: 0.3    // learning rate
-    });
-
-    //  END SOLUTION CODE
 
     console.timeEnd('trainBrain');
 
@@ -88,11 +72,6 @@ module.exports = {
         nnPredictions: { defaulted: 0.34634397489904356 } }
       */
 
-    // START SOLUTION CODE
-    for(var i = 0; i < testData.length; i++) {
-      testData[i].nnPredictions = net.run(testData[i].input);
-    }
-    // END SOLUTION CODE
 
     // everything below is formatting the output
     // first we create a results obj with keys labeled 0 to 100
