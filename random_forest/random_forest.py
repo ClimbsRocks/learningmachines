@@ -27,7 +27,13 @@ try:
             # definitely parse out the leading letter here. that denotes the deck they're on. 
             # possibly parse out the number of cabins they have as well?
         # embarked
-    def binarize:
+    # TODO: binarize the categorical data in the categorical fields
+    # information like 'embarked' represents a category (which city did you embark in?) rather than a number (how much money did you pay for your fare?)
+    # a common way to format categorical data for machine learning is to turn it into binary values
+    # so if we have three categories ('C','Q',and 'S'), we would turn that into something like separate columns for 'embarkedC', 'embarkedQ', and 'embarkedS', with a value of either 0 or 1
+    # define your own binarize function here, that will take in categorical data, and turn it into a single binary representation of which category is present for this row
+    def binarize(columnName, columnValue):
+
 
     # SOLUTION CODE BELOW
     for row in data:
@@ -45,8 +51,9 @@ try:
         pasenger['fare'] = row['fare']
 
 
-
         allData.append(passenger)
+    # END SOLUTION CODE
+
 
 
 
