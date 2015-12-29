@@ -56,11 +56,6 @@ module.exports = {
 
     console.timeEnd('trainBrain');
 
-    // once we've trained the brain, write it to json to back it up
-    var jsonBackup = net.toJSON();
-    var runBackup = net.toFunction();
-    // module.exports.writeBrain(jsonBackup);
-
     // now test the results and see how our machine did!
     module.exports.testBrain(testingData);
   },
@@ -170,41 +165,6 @@ module.exports = {
 
   },
 
-  // //Writes the neural net to a file for backup
-  // //You can ignore this 
-  // writeBrain: function(json) {
-  //   // give each of our fileNames some unique information so we know what type of net this was
-  //   var fileName = 'hiddenLayers' + net.hiddenSizes + 'learningRate' + net.learningRate + new Date().getTime() + '.json';
-  //   fs.writeFile(fileName, JSON.stringify(json), function(err) {
-  //     if(err) {
-  //       console.error('sad, did not write to file');
-  //     } else {
-  //       console.log('wrote to file',fileName);
-  //     }
-  //   });
-  // },
-
-  // // loads a saved neural net and tests it on the dataset
-  // // testing it on the entire dataset as we are doing here is an anti-pattern; you would want to test it only on a holdout set of test data that the machine hasn't already been trained on
-  // loadAndTestBrain: function(req,res) {
-  //   db.query('SELECT * FROM neuralNet', function(err, response) {
-  //     if(err) {
-  //       console.error(err);
-  //     } else {
-  //       var formattedData = module.exports.formatData(response);
-  //       fs.readFile('name', 'utf8', function(err, data) {
-  //         if(err) {
-  //           console.error(err);
-  //         } else {
-  //           net.fromJSON(JSON.parse(data));
-  //           res.send('Loaded the brain! Testing it now.')
-  //           module.exports.testBrain(formattedData);
-  //         }
-  //       });
-
-  //     }
-  //   });
-  // },
 
   kagglePredict: function(req, res) {
     db.query('SELECT * FROM submission', function(err, response) {
