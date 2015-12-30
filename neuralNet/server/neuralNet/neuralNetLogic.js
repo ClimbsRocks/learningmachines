@@ -151,7 +151,9 @@ module.exports = {
     console.log(results);
   },
 
-  //Takes our raw data input, roughly normalizes it, and transforms it into numbers between 0 and 1 like our net expects
+  // neural nets expect to get data that is only between 0 and 1 (or -1 and 1).
+  // the easiest way to do that is min-max normalizing
+  // we use a slightly modified version of that here that is designed to minimize the effects of outliers
   //You can ignore this until extra credit
   formatData: function(data) {
 
