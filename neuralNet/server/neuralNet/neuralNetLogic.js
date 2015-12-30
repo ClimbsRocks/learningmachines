@@ -1,6 +1,7 @@
 var db = require('../db');
 var path = require('path');
 var fs = require('fs');
+var Baby = require('babyparse');
 //This line effectively means we've placed the "brain" object that brain.js gives us into the usable scope for this file. We have not yet done anything with that object- that's your task!
 var brain = require('brain');
 
@@ -15,6 +16,30 @@ var net = new brain.NeuralNetwork({
 module.exports = {
   // this is our main entry point
   startNet: function(req,res) {
+
+    fs.readFile('train.csv', 'utf8', function(err, data) {
+      if(err) {
+        console.error('error reading in the train.csv file. Please make sure it is saved in the same directory as neuralNetLogic.js, and is named train.csv');
+        console.error(err);
+      } else {
+        // format that data. see that modular function below
+        var formattedData = module.exports.formatData(response);
+        var training = [];
+        var testing = [];
+        // split the data into a test set (20% of the data) and a training set (80% of the data)
+        for(var i = 0; i < formattedData.length; i++) {
+          if(Math.random() > .8) {
+            testing.push(formattedData[i]);
+          } else {
+            training.push(formattedData[i]);
+          }
+        }
+        // pass this formatted data into trainBrain
+        module.exports.trainBrain(training, testing);
+      }
+    });
+
+    // The code below only applies to people who wanted to get in more practice with databases. 
     // grab all the data from the db
     db.query('SELECT * FROM neuralNet', function(err, response) {
       if(err) {
