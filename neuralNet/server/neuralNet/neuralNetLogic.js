@@ -17,14 +17,16 @@ module.exports = {
   // this is our main entry point
   startNet: function(req,res) {
 
-    fs.readFile('train.csv', 'utf8', function(err, fileData) {
+    fs.readFile(path.join(__dirname, 'train.csv'), 'utf8', function(err, fileData) {
       if(err) {
         console.error('error reading in the train.csv file. Please make sure it is saved in the same directory as neuralNetLogic.js, and is named train.csv');
         console.error(err);
       } else {
         // csv files can be saved in a number of different ways. PapaParse (with it's node.js version BabyParse) will take care of all the messiness for us, and reliably return data in a consistent format for us to work with.
-        rows = Baby.parse(fileData).data;
-        console.low(rows);
+        rows = Baby.parse(fileData, {
+          header:true
+        }).data;
+        console.log(rows);
         // format that data. see that modular function below
         var formattedData = module.exports.formatData(rows);
         var training = [];
@@ -153,40 +155,54 @@ module.exports = {
   //You can ignore this until extra credit
   formatData: function(data) {
 
+    // { SeriousDlqin2yrs: '0',
+    // ID: '150000',
+    // RevolvingUtilizationOfUnsecuredLines: '0.850282951',
+    // age: '64',
+    // 'NumberOfTime30-59DaysPastDueNotWorse': '0',
+    // DebtRatio: '0.249908077',
+    // MonthlyIncome: '8158',
+    // NumberOfOpenCreditLinesAndLoans: '8',
+    // NumberOfTimes90DaysLate: '0',
+    // NumberRealEstateLoansOrLines: '2',
+    // 'NumberOfTime60-89DaysPastDueNotWorse': '0',
+    // NumberOfDependents: '0' }
+
     console.log('formatting Data');
     var formattedResults = [];
     for(var i = 0; i < data.length; i++) {
-      var item = data[i];
+      var rawRow = data[i];
 
-      var obs = {};
-      obs.id = item.id;
-      obs.input = {};
-      obs.output = {
-        defaulted: item.seriousDelinquency
+      var formattedRow = {};
+      formattedRow.id = rawRow.id;
+      // brain.js expects each row object to have an input property (all the information we know about that row), and an output property (what we are trying to predict)
+      formattedRow.input = {};
+      formattedRow.output = {
+        defaulted: rawRow.SeriousDlqin2yrs
       };
 
       //if the utilization rate is below 1, we divide it by 3 to make it smaller (taking the cube root would make it larger);
-      if(item.creditUtilization < 1) {
-        obs.input.utilizationRate = item.creditUtilization/3;
+      if(rawRow.creditUtilization < 1) {
+        formattedRow.input.utilizationRate = rawRow.RevolvingUtilizationOfUnsecuredLines/3;
       } else {
         //otherwise we take the cube root of it, and then divide by 37 (which is the max number we would have after cube rooting ).
-        obs.input.utilizationRate = Math.pow(item, 1/3)/37;
+        formattedRow.input.utilizationRate = Math.pow(rawRow, 1/3)/37;
       }
 
-      obs.input.age = item.age/109;
-      obs.input.thirtyDaysLate = item['30To60DaysLate'] / 98;
-      obs.input.monthlyIncome = Math.sqrt(item.MonthlyIncome) / 1735;
-      obs.input.openCreditLines = Math.sqrt(item.NumberOfOpenCreditLines)/8;
+      formattedRow.input.age = rawRow.age/109;
+      formattedRow.input.thirtyDaysLate = rawRow['30To60DaysLate'] / 98;
+      formattedRow.input.monthlyIncome = Math.sqrt(rawRow.MonthlyIncome) / 1735;
+      formattedRow.input.openCreditLines = Math.sqrt(rawRow.NumberOfOpenCreditLines)/8;
 
-      obs.input.ninetyDaysLate = Math.sqrt(item['90DaysLate']) / 10;
+      formattedRow.input.ninetyDaysLate = Math.sqrt(rawRow['90DaysLate']) / 10;
 
-      obs.input.realEstateLines = item.NumberOfRealEstateLoansOrLines/ 54;
+      formattedRow.input.realEstateLines = rawRow.NumberOfRealEstateLoansOrLines/ 54;
 
-      obs.input.sixtyDaysLate = Math.sqrt(item['60To89DaysLate']) / 10;
+      formattedRow.input.sixtyDaysLate = Math.sqrt(rawRow['60To89DaysLate']) / 10;
 
-      obs.input.numDependents = Math.sqrt(item.NumberOfDependents) / 5;
+      formattedRow.input.numDependents = Math.sqrt(rawRow.NumberOfDependents) / 5;
 
-      formattedResults.push(obs);
+      formattedResults.push(formattedRow);
     }
     console.log('formatted the data');
     return formattedResults;
