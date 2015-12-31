@@ -24,9 +24,9 @@ module.exports = {
       } else {
         // csv files can be saved in a number of different ways. PapaParse (with it's node.js version BabyParse) will take care of all the messiness for us, and reliably return data in a consistent format for us to work with.
         rows = Baby.parse(fileData, {
-          header:true
+          header:true,
+          dynamicTyping: true
         }).data;
-        console.log(rows);
         // format that data. see that modular function below
         var formattedData = module.exports.formatData(rows);
         var training = [];
@@ -127,7 +127,7 @@ module.exports = {
     var results = {};
     for(var j = 0; j <=100; j++) {
       results[j] = {
-        nnCount: 0,
+        count: 0,
         defaulted: 0
       };
     }
@@ -137,14 +137,14 @@ module.exports = {
       var prediction = Math.round( testData[i].nnPredictions.defaulted * 100);
       //We then increment the total number of cases that the net predicts exist at this level of risk 
       // (i.e., if the net's prediction for a given input is .38745, we would add one more to the 39 category, since we now have one more observation that the net has predicted has a 39% chance of defaulting)
-      results[prediction].nnCount++;
+      results[prediction].count++;
       //And whether this input resulted in a default or not
       results[prediction].defaulted += testData[i].output.defaulted;
     }
 
     //We don't normally like to assume the keys are going to be ordered, but it's a time-saving shortcut to make at the moment, and the consequences are very low if it's not perfectly ordered
     for(var key in results) {
-      console.log(key + '- nnCount: ' + results[key].nnCount + ' defaulted: ' + results[key].defaulted + ' Default Rate: ' + Math.round(results[key].defaulted/results[key].nnCount * 100) + '%' );
+      console.log(key + '- count: ' + results[key].count + ' defaulted: ' + results[key].defaulted + ' Default Rate: ' + Math.round(results[key].defaulted/results[key].count * 100) + '%' );
     }
     console.timeEnd('testBrain');
 
@@ -157,18 +157,7 @@ module.exports = {
   //You can ignore this until extra credit
   formatData: function(data) {
 
-    // { SeriousDlqin2yrs: '0',
-    // ID: '150000',
-    // RevolvingUtilizationOfUnsecuredLines: '0.850282951',
-    // age: '64',
-    // 'NumberOfTime30-59DaysPastDueNotWorse': '0',
-    // DebtRatio: '0.249908077',
-    // MonthlyIncome: '8158',
-    // NumberOfOpenCreditLinesAndLoans: '8',
-    // NumberOfTimes90DaysLate: '0',
-    // NumberRealEstateLoansOrLines: '2',
-    // 'NumberOfTime60-89DaysPastDueNotWorse': '0',
-    // NumberOfDependents: '0' }
+
 
     console.log('formatting Data');
     var formattedResults = [];
@@ -176,7 +165,7 @@ module.exports = {
       var rawRow = data[i];
 
       var formattedRow = {};
-      formattedRow.id = rawRow.id;
+      formattedRow.id = rawRow.ID;
       // brain.js expects each row object to have an input property (all the information we know about that row), and an output property (what we are trying to predict)
       formattedRow.input = {};
       formattedRow.output = {
@@ -190,17 +179,28 @@ module.exports = {
         //otherwise we take the cube root of it, and then divide by 37 (which is the max number we would have after cube rooting ).
         formattedRow.input.utilizationRate = Math.pow(rawRow.RevolvingUtilizationOfUnsecuredLines, 1/3)/37;
       }
-
+      // { SeriousDlqin2yrs: '0',
+      // ID: '150000',
+      // RevolvingUtilizationOfUnsecuredLines: '0.850282951',
+      // age: '64',
+      // 'NumberOfTime30-59DaysPastDueNotWorse': '0',
+      // DebtRatio: '0.249908077',
+      // MonthlyIncome: '8158',
+      // NumberOfOpenCreditLinesAndLoans: '8',
+      // NumberOfTimes90DaysLate: '0',
+      // NumberRealEstateLoansOrLines: '2',
+      // 'NumberOfTime60-89DaysPastDueNotWorse': '0',
+      // NumberOfDependents: '0' }
       formattedRow.input.age = rawRow.age/109;
-      formattedRow.input.thirtyDaysLate = rawRow['30To60DaysLate'] / 98;
+      formattedRow.input.thirtyDaysLate = rawRow['NumberOfTime30-59DaysPastDueNotWorse'] / 98;
       formattedRow.input.monthlyIncome = Math.sqrt(rawRow.MonthlyIncome) / 1735;
-      formattedRow.input.openCreditLines = Math.sqrt(rawRow.NumberOfOpenCreditLines)/8;
+      formattedRow.input.openCreditLines = Math.sqrt(rawRow.NumberOfOpenCreditLinesAndLoans)/8;
 
-      formattedRow.input.ninetyDaysLate = Math.sqrt(rawRow['90DaysLate']) / 10;
+      formattedRow.input.ninetyDaysLate = Math.sqrt(rawRow['NumberOfTimes90DaysLate']) / 10;
 
-      formattedRow.input.realEstateLines = rawRow.NumberOfRealEstateLoansOrLines/ 54;
+      formattedRow.input.realEstateLines = rawRow.NumberRealEstateLoansOrLines/ 54;
 
-      formattedRow.input.sixtyDaysLate = Math.sqrt(rawRow['60To89DaysLate']) / 10;
+      formattedRow.input.sixtyDaysLate = Math.sqrt(rawRow['NumberOfTime60-89DaysPastDueNotWorse']) / 10;
 
       formattedRow.input.numDependents = Math.sqrt(rawRow.NumberOfDependents) / 5;
 
