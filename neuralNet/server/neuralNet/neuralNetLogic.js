@@ -76,7 +76,7 @@ module.exports = {
     // START SOLUTION CODE:
     var writeInfo = net.train(trainingData,{
       errorThresh: 0.05,  // error threshold to reach
-      iterations: 10,   // maximum training iterations
+      iterations: 3,   // maximum training iterations
       log: true,           // console.log() progress periodically
       logPeriod: 1,       // number of iterations between logging
       learningRate: 0.3    // learning rate
@@ -125,7 +125,7 @@ module.exports = {
       // Each position aggregates the count of loans the neural net has predicted have this level of risk
       // and the number of observed defaults at that level of risk
     var results = {};
-    for(var j = 0; j <=100; j++) {
+    for(var j = 0; j <=100; j+=5) {
       results[j] = {
         count: 0,
         defaulted: 0
@@ -135,11 +135,13 @@ module.exports = {
     for(var i = 0; i < testData.length; i++) {
       //we format the net's prediction to be an int between 0 and 100
       var prediction = Math.round( testData[i].nnPredictions.defaulted * 100);
+      // then, we group up into buckets of 5
+      var predictionKey = Math.floor(prediction/5) * 5;
       //We then increment the total number of cases that the net predicts exist at this level of risk 
       // (i.e., if the net's prediction for a given input is .38745, we would add one more to the 39 category, since we now have one more observation that the net has predicted has a 39% chance of defaulting)
-      results[prediction].count++;
+      results[predictionKey].count++;
       //And whether this input resulted in a default or not
-      results[prediction].defaulted += testData[i].output.defaulted;
+      results[predictionKey].defaulted += testData[i].output.defaulted;
     }
 
     //We don't normally like to assume the keys are going to be ordered, but it's a time-saving shortcut to make at the moment, and the consequences are very low if it's not perfectly ordered
