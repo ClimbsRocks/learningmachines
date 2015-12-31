@@ -184,11 +184,11 @@ module.exports = {
       };
 
       //if the utilization rate is below 1, we divide it by 3 to make it smaller (taking the cube root would make it larger);
-      if(rawRow.creditUtilization < 1) {
+      if(rawRow.RevolvingUtilizationOfUnsecuredLines < 1) {
         formattedRow.input.utilizationRate = rawRow.RevolvingUtilizationOfUnsecuredLines/3;
       } else {
         //otherwise we take the cube root of it, and then divide by 37 (which is the max number we would have after cube rooting ).
-        formattedRow.input.utilizationRate = Math.pow(rawRow, 1/3)/37;
+        formattedRow.input.utilizationRate = Math.pow(rawRow.RevolvingUtilizationOfUnsecuredLines, 1/3)/37;
       }
 
       formattedRow.input.age = rawRow.age/109;
