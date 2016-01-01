@@ -154,15 +154,33 @@ module.exports = {
   },
 
   // neural nets expect to get data that is only between 0 and 1 (or -1 and 1).
-  // the easiest way to do that is min-max normalizing
+  // the easiest way to do that is what's called min-max normalizing 
+    // the highest number in the dataset becomes 1, and the lowest number becomes 0, with everything else scaled in between
   // we use a slightly modified version of that here that is designed to minimize the effects of outliers
   //You can ignore this until extra credit
   formatData: function(data) {
 
-
+    /*
+      each item in our incoming data is going to be an object that looks like this:
+      { 
+        SeriousDlqin2yrs: '0',
+        ID: '150000',
+        RevolvingUtilizationOfUnsecuredLines: '0.850282951',
+        age: '64',
+        'NumberOfTime30-59DaysPastDueNotWorse': '0',
+        DebtRatio: '0.249908077',
+        MonthlyIncome: '8158',
+        NumberOfOpenCreditLinesAndLoans: '8',
+        NumberOfTimes90DaysLate: '0',
+        NumberRealEstateLoansOrLines: '2',
+        'NumberOfTime60-89DaysPastDueNotWorse': '0',
+        NumberOfDependents: '0' 
+      }
+    */
 
     console.log('formatting Data');
     var formattedResults = [];
+
     for(var i = 0; i < data.length; i++) {
       var rawRow = data[i];
 
@@ -174,6 +192,16 @@ module.exports = {
         defaulted: rawRow.SeriousDlqin2yrs
       };
 
+      // we are using a VERY rough approximation of min-max normalization here
+      // for example, the largest age in the dataset, so we're just dividing by 109
+      formattedRow.input.age = rawRow.age/109;
+      formattedRow.input.thirtyDaysLate = rawRow['NumberOfTime30-59DaysPastDueNotWorse'] / 98;
+      formattedRow.input.monthlyIncome = Math.sqrt(rawRow.MonthlyIncome) / 1735;
+      formattedRow.input.openCreditLines = Math.sqrt(rawRow.NumberOfOpenCreditLinesAndLoans)/8;
+      formattedRow.input.ninetyDaysLate = Math.sqrt(rawRow['NumberOfTimes90DaysLate']) / 10;
+      formattedRow.input.realEstateLines = rawRow.NumberRealEstateLoansOrLines/ 54;
+      formattedRow.input.sixtyDaysLate = Math.sqrt(rawRow['NumberOfTime60-89DaysPastDueNotWorse']) / 10;
+      formattedRow.input.numDependents = Math.sqrt(rawRow.NumberOfDependents) / 5;
       //if the utilization rate is below 1, we divide it by 3 to make it smaller (taking the cube root would make it larger);
       if(rawRow.RevolvingUtilizationOfUnsecuredLines < 1) {
         formattedRow.input.utilizationRate = rawRow.RevolvingUtilizationOfUnsecuredLines/3;
@@ -181,30 +209,6 @@ module.exports = {
         //otherwise we take the cube root of it, and then divide by 37 (which is the max number we would have after cube rooting ).
         formattedRow.input.utilizationRate = Math.pow(rawRow.RevolvingUtilizationOfUnsecuredLines, 1/3)/37;
       }
-      // { SeriousDlqin2yrs: '0',
-      // ID: '150000',
-      // RevolvingUtilizationOfUnsecuredLines: '0.850282951',
-      // age: '64',
-      // 'NumberOfTime30-59DaysPastDueNotWorse': '0',
-      // DebtRatio: '0.249908077',
-      // MonthlyIncome: '8158',
-      // NumberOfOpenCreditLinesAndLoans: '8',
-      // NumberOfTimes90DaysLate: '0',
-      // NumberRealEstateLoansOrLines: '2',
-      // 'NumberOfTime60-89DaysPastDueNotWorse': '0',
-      // NumberOfDependents: '0' }
-      formattedRow.input.age = rawRow.age/109;
-      formattedRow.input.thirtyDaysLate = rawRow['NumberOfTime30-59DaysPastDueNotWorse'] / 98;
-      formattedRow.input.monthlyIncome = Math.sqrt(rawRow.MonthlyIncome) / 1735;
-      formattedRow.input.openCreditLines = Math.sqrt(rawRow.NumberOfOpenCreditLinesAndLoans)/8;
-
-      formattedRow.input.ninetyDaysLate = Math.sqrt(rawRow['NumberOfTimes90DaysLate']) / 10;
-
-      formattedRow.input.realEstateLines = rawRow.NumberRealEstateLoansOrLines/ 54;
-
-      formattedRow.input.sixtyDaysLate = Math.sqrt(rawRow['NumberOfTime60-89DaysPastDueNotWorse']) / 10;
-
-      formattedRow.input.numDependents = Math.sqrt(rawRow.NumberOfDependents) / 5;
 
       formattedResults.push(formattedRow);
     }
