@@ -44,28 +44,6 @@ module.exports = {
       }
     });
 
-    // The code below only applies to people who wanted to get in more practice with databases. 
-    // grab all the data from the db
-    // db.query('SELECT * FROM neuralNet', function(err, response) {
-    //   if(err) {
-    //     console.error(err);
-    //   } else {
-    //     // format that data. see that modular function below
-    //     var formattedData = module.exports.formatData(response);
-    //     var training = [];
-    //     var testing = [];
-    //     // split the data into a test set (20% of the data) and a training set (80% of the data)
-    //     for(var i = 0; i < formattedData.length; i++) {
-    //       if(Math.random() > .8) {
-    //         testing.push(formattedData[i]);
-    //       } else {
-    //         training.push(formattedData[i]);
-    //       }
-    //     }
-    //     // pass this formatted data into trainBrain
-    //     module.exports.trainBrain(training, testing);
-    //   }
-    // });
   },
 
   trainBrain: function(trainingData, testingData) {
