@@ -73,8 +73,7 @@ module.exports = {
   testBrain: function(testData) {
     //console.time gives us the time it takes to complete a task
     console.time('testBrain');
-    //TODO: Your code here to get the predicted values for everything in our testData
-    //The logging code provided for you below expects the predicted net values to be stored as properties on each item in testData under the property name nnPredictions. 
+    //TODO: Your code here to get the predicted values for each item in our testData
     //Here's what an object in the testData array should look like after you've gotten the predicted result from the net:
       /*
       { input: 
@@ -88,12 +87,14 @@ module.exports = {
            sixtyDaysLate: 0,
            numDependents: 0 },
         output: { defaulted: 0 },
-        nnPredictions: { defaulted: 0.34634397489904356 } }
+        netPrediction: { defaulted: 0.34634397489904356 } }
       */
+    // note that the predicted results are stored in a property called netPrediction 
+    // remember, this is an engineering practice. I have written code that expects these objects to adhere to a certain API, following the example above. 
 
     // START SOLUTION CODE
     for(var i = 0; i < testData.length; i++) {
-      testData[i].nnPredictions = net.run(testData[i].input);
+      testData[i].netPrediction = net.run(testData[i].input);
     }
     // END SOLUTION CODE
 
@@ -112,7 +113,7 @@ module.exports = {
 
     for(var i = 0; i < testData.length; i++) {
       //we format the net's prediction to be an int between 0 and 100
-      var prediction = Math.round( testData[i].nnPredictions.defaulted * 100);
+      var prediction = Math.round( testData[i].netPrediction.defaulted * 100);
       // then, we group up into buckets of 5
       var predictionKey = Math.floor(prediction/5) * 5;
       //We then increment the total number of cases that the net predicts exist at this level of risk 
