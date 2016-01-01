@@ -1,4 +1,7 @@
 #!/bin/bash
+
+gch master
+git merge solution
 # all .js files, exclusing the node_modules folder
 FILES=`find . -path ./neuralNet/server/node_modules -prune -o -name "*.js"`
 
