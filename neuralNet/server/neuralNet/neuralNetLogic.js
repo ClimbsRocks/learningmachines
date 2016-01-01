@@ -75,8 +75,8 @@ module.exports = {
     //TODO: Your code here to train the neural net
     // START SOLUTION CODE:
     var writeInfo = net.train(trainingData,{
-      errorThresh: 0.05,  // error threshold to reach
-      iterations: 3,   // maximum training iterations
+      errorThresh: 0.04,  // error threshold to reach
+      iterations: 30,   // maximum training iterations
       log: true,           // console.log() progress periodically
       logPeriod: 1,       // number of iterations between logging
       learningRate: 0.3    // learning rate
@@ -209,6 +209,19 @@ module.exports = {
         //otherwise we take the cube root of it, and then divide by 37 (which is the max number we would have after cube rooting ).
         formattedRow.input.utilizationRate = Math.pow(rawRow.RevolvingUtilizationOfUnsecuredLines, 1/3)/37;
       }
+
+      // TODO: perform some feature engineering
+      // for example, try adding up the total number of days a person has been late on their previous loans
+      // START SOLUTION CODE
+      formattedRow.input.totalDaysLate = 
+        rawRow['NumberOfTime30-59DaysPastDueNotWorse'] * 45 + 
+        rawRow['NumberOfTime60-89DaysPastDueNotWorse'] * 75 +
+        rawRow['NumberOfTimes90DaysLate'] * 90
+
+      // we figured out that the max totalDaysLate value is 20580
+      formattedRow.input.totalDaysLate = formattedRow.input.totalDaysLate / 20580
+      // END SOLUTION CODE
+
 
       formattedResults.push(formattedRow);
     }
