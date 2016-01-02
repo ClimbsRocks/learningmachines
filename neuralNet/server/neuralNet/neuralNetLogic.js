@@ -8,7 +8,7 @@ var brain = require('brain');
 //TODO: your code here to create a new neural net instance
 // START SOLUTION CODE
 var net = new brain.NeuralNetwork({
-  hiddenLayers:[20,20], //Use the docs to explore various numbers you might want to use here
+  hiddenLayers:[40,40], //Use the docs to explore various numbers you might want to use here
   learningRate:0.6
 });
 //  END SOLUTION CODE
@@ -29,9 +29,9 @@ module.exports = {
         }).data;
         // format that data. see that modular function below
         var formattedData = module.exports.formatData(rows);
+        // split the data into a test set (20% of the data) and a training set (80% of the data)
         var training = [];
         var testing = [];
-        // split the data into a test set (20% of the data) and a training set (80% of the data)
         for(var i = 0; i < formattedData.length; i++) {
           if(Math.random() > .8) {
             testing.push(formattedData[i]);
@@ -54,7 +54,7 @@ module.exports = {
     // START SOLUTION CODE:
     var writeInfo = net.train(trainingData,{
       errorThresh: 0.04,  // error threshold to reach
-      iterations: 30,   // maximum training iterations
+      iterations: 10,   // maximum training iterations
       log: true,           // console.log() progress periodically
       logPeriod: 1,       // number of iterations between logging
       learningRate: 0.3    // learning rate
@@ -117,7 +117,7 @@ module.exports = {
       // then, we group up into buckets of 5
       var predictionKey = Math.floor(prediction/5) * 5;
       //We then increment the total number of cases that the net predicts exist at this level of risk 
-      // (i.e., if the net's prediction for a given input is .38745, we would add one more to the 39 category, since we now have one more observation that the net has predicted has a 39% chance of defaulting)
+      // (i.e., if the net's prediction for a given input is .38745, we would add one more to the 35 bucket, since we now have one more observation that the net has predicted has a 39% chance of defaulting)
       results[predictionKey].count++;
       //And whether this input resulted in a default or not
       results[predictionKey].defaulted += testData[i].output.defaulted;
@@ -204,7 +204,6 @@ module.exports = {
 
       formattedResults.push(formattedRow);
     }
-    console.log('formatted the data');
     return formattedResults;
 
   },
