@@ -67,19 +67,11 @@ module.exports = {
     console.timeEnd('trainBrain');
 
     // now test the results and see how our machine did!
-    module.exports.testBrain(testingData);
+    module.exports.getPredictions(testingData);
   },
 
   // get predictions from the neural net on expected default likelihood for data we haven't tested it on
   getPredictions: function(testData) {
-
-  },
-
-  //Test our brain with a given set of testData
-  //Logs the output of default rate at that prediction level
-  testBrain: function(testData) {
-    //console.time gives us the time it takes to complete a task
-    console.time('testBrain');
     //TODO: Your code here to get the predicted values for each item in our testData
     //Here's what an object in the testData array should look like after you've gotten the predicted result from the net:
       /*
@@ -104,6 +96,12 @@ module.exports = {
       testData[i].netPrediction = net.run(testData[i].input);
     }
     // END SOLUTION CODE
+    module.exports.testBrain(testData);
+  },
+
+  //Test our brain with a given set of testData
+  //Logs the output of default rate at that prediction level
+  testBrain: function(testData) {
 
     // everything below is formatting the output
     // first we create a results obj with keys labeled 0 to 100 in increments of 5
@@ -134,9 +132,7 @@ module.exports = {
     for(var key in results) {
       console.log(key + '- count: ' + results[key].count + ' defaulted: ' + results[key].defaulted + ' Default Rate: ' + Math.round(results[key].defaulted/results[key].count * 100) + '%' );
     }
-    console.timeEnd('testBrain');
 
-    console.log(results);
   },
 
   // neural nets expect to get data that is only between 0 and 1 (or -1 and 1).
