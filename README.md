@@ -11,10 +11,10 @@
 * Start the server!
     * `nodemon server.js`
 
-You can now make api calls to this server, either through your browser (http://localhost:5000/neuralNet/startNet), or through curl on your command line `curl localhost:5000/neuralNet/startNet`
+You can now make api calls to this server, either through your browser (`http://localhost:5000/neuralNet/startNet`), or through curl on your command line (`curl localhost:5000/neuralNet/startNet`)
 
 ### The key files in our node server are in the neuralNet folder.
-  1. neuralNetLogic.js is where we have all the actual JS logic built out. 
+  `neuralNetLogic.js` is where we have all the actual JS logic built out. 
 
 ### Your turn!
 Here are the things I expect you to do
@@ -24,7 +24,8 @@ Here are the things I expect you to do
   4. Add in new data to train the net. Rewrite what's currently in formatData with new data points, or 'features' as they're called in data science, that are combinations of the raw data we already have. Examples would include exact ratios that the net currently can't access because we've already transformed the data into a number between 0 and 1.
 
 #### Extra Credit
-  1. Handle cases that have missing data ("NA") differently than cases that have full data
+  * Handle cases that have missing data ("NA") differently than cases that have full data
+  * Perform any other feature engineering you can think of
 
 #### Fantasy Mode
   1. Parallelize the training of multiple nets at the same time. Training each net is synchronous, so parallelizing won't help you train a single net any faster. But you could try creating multiple versions that have different parameters (number of nodes, hidden layers, learning rate, etc.) and train those in parallel with each other. 
