@@ -7,7 +7,7 @@ var brain = require('brain');
 //TODO: your code here to create a new neural net instance
 // START SOLUTION CODE
 var net = new brain.NeuralNetwork({
-  hiddenLayers:[40,40], //Use the docs to explore various numbers you might want to use here
+  hiddenLayers:[20,20], //Use the docs to explore various numbers you might want to use here
   learningRate:0.6
 });
 //  END SOLUTION CODE
@@ -26,8 +26,10 @@ module.exports = {
           header:true,
           dynamicTyping: true
         }).data;
-        // format that data. see that modular function below
+
+        // format the data. see that modular function below
         var formattedData = module.exports.formatData(rows);
+
         // split the data into a test set (20% of the data) and a training set (80% of the data)
         var training = [];
         var testing = [];
@@ -38,6 +40,7 @@ module.exports = {
             training.push(formattedData[i]);
           }
         }
+
         // pass this formatted data into trainBrain
         module.exports.trainBrain(training, testing);
       }
@@ -51,20 +54,25 @@ module.exports = {
 
     //TODO: Your code here to train the neural net
     // START SOLUTION CODE:
-    var writeInfo = net.train(trainingData,{
+    var trainingResults = net.train(trainingData,{
       errorThresh: 0.04,  // error threshold to reach
-      iterations: 10,   // maximum training iterations
-      log: true,           // console.log() progress periodically
+      iterations: 10,     // maximum training iterations
+      log: true,          // console.log() progress periodically
       logPeriod: 1,       // number of iterations between logging
-      learningRate: 0.3    // learning rate
+      learningRate: 0.3   // learning rate
     });
 
-    //  END SOLUTION CODE
+    // END SOLUTION CODE
 
     console.timeEnd('trainBrain');
 
     // now test the results and see how our machine did!
     module.exports.testBrain(testingData);
+  },
+
+  // get predictions from the neural net on expected default likelihood for data we haven't tested it on
+  getPredictions: function(testData) {
+
   },
 
   //Test our brain with a given set of testData
@@ -89,7 +97,7 @@ module.exports = {
         netPrediction: { defaulted: 0.34634397489904356 } }
       */
     // note that the predicted results are stored in a property called netPrediction 
-    // remember, this is an engineering practice. I have written code that expects these objects to adhere to a certain API, following the example above. 
+    // remember, this is an engineering practice. The rest of this code expects these objects to adhere to a certain API, following the example above. 
 
     // START SOLUTION CODE
     for(var i = 0; i < testData.length; i++) {
@@ -98,7 +106,7 @@ module.exports = {
     // END SOLUTION CODE
 
     // everything below is formatting the output
-    // first we create a results obj with keys labeled 0 to 100
+    // first we create a results obj with keys labeled 0 to 100 in increments of 5
     // eash position in results is an object itself
       // Each position aggregates the count of loans the neural net has predicted have this level of risk
       // and the number of observed defaults at that level of risk
