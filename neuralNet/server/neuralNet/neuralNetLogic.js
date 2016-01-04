@@ -1,4 +1,3 @@
-var db = require('../db');
 var path = require('path');
 var fs = require('fs');
 var Baby = require('babyparse');
@@ -208,7 +207,7 @@ module.exports = {
 
   },
 
-
+  // this still needs to be refactored to read in a file, rather than from the database
   kagglePredict: function(req, res) {
     db.query('SELECT * FROM submission', function(err, response) {
       if(err) {
@@ -246,24 +245,6 @@ module.exports = {
 
       }
     });
-  },
-
-  kaggleTrain: function(req,res) {
-    // grab all the data from the db
-    db.query('SELECT * FROM neuralNet', function(err, response) {
-      if(err) {
-        console.error(err);
-      } else {
-        // for Kaggle, we will train the brain on the entire dataset
-        // just for fun, we'll also "test" it on the entire dataset
-        // because the real test is the submission file. this "test" is just for the fun of having something appear in our console
-        var formattedData = module.exports.formatData(response);
-        var testing = formattedData;
-
-        // pass this formatted data into trainBrain
-        module.exports.trainBrain(formattedData, testing);
-      }
-    });
-  },
+  }
 
 };
