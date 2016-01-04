@@ -1,18 +1,42 @@
 import MySQLdb as mdb 
 import MySQLdb.cursors
 import sys
+import os.path as path
+import csv
 
 
 try:
-    con = mdb.connect(host='localhost', user='root', db='learningMachines')
-    cur = con.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT * FROM random_forest')
+    # X is a matrix with the features for our training data (what information we know about each row, without the answers)
+    X = []
+    # y is the answer for each row
+    y = []
 
-    print 'connected to and about to query db'
+    with open('titanic.csv', 'rU') as openInputFile:
+        inputRows = csv.reader(openInputFile)
+        # ignore the header row
+        firstRow = False
+        for row in inputRows:
+            if(firstRow):
+                rowAsFloats = []
+                # if possible, read in the data as floats (numbers with decimal points) rather than strings
+                for idx, val in enumerate(row):
+                    try:
+                        val = float(val)
+                    rowAsFloats.append( val )
+                X.append(row)
+            else:
+                headerRow = row
+                firstRow = True
 
-    data = cur.fetchall()
+    # con = mdb.connect(host='localhost', user='root', db='learningMachines')
+    # cur = con.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+    # cur.execute('SELECT * FROM random_forest')
 
-    print data[0]
+    # print 'connected to and about to query db'
+
+    # data = cur.fetchall()
+
+    # print data[0]
 
     allData = []
 
@@ -53,10 +77,3 @@ try:
 
         allData.append(passenger)
     # END SOLUTION CODE
-
-
-
-
-except mdb.Error, e:
-    print 'Error %d: %s' % (e.args[0], e.args[1])
-    sys.exit()
