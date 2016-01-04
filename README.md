@@ -28,7 +28,7 @@ Here are the things I expect you to do
   * Perform any other feature engineering you can think of
 
 #### Fantasy Mode
-  1. Parallelize the training of multiple nets at the same time. Training each net is synchronous, so parallelizing won't help you train a single net any faster. But you could try creating multiple versions that have different parameters (number of nodes, hidden layers, learning rate, etc.) and train those in parallel with each other. 
+  - Parallelize the training of multiple nets at the same time. Training each net is synchronous, so parallelizing won't help you train a single net any faster. But you could try creating multiple versions that have different parameters (number of nodes, hidden layers, learning rate, etc.) and train those in parallel with each other. 
 
-  2. Build out grid search to try different combinations of number of hidden layers and number of nodes. 
+  - Build out grid search to try different combinations of number of hidden layers and number of nodes. 
     Trying different combinations of hyperparameters (the parameters that determine the shape or conditions of the algorithm, such as number of nodes, or number of hidden layers) to find the optimal set is called grid search. scikit-learn has a [good module explaining and implementing grid search](http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html). We can't use their implementation direction, but it's a good explanation of the high-level concept.
