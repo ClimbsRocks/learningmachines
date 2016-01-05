@@ -12,31 +12,21 @@ try:
     y = []
 
     with open('titanic.csv', 'rU') as openInputFile:
-        inputRows = csv.reader(openInputFile)
+        # csv.DictReader will take a csv file, and read it in as an array of python dictionaries (similar to JavaScript objects, or hashes)
+        inputRows = csv.DictReader(openInputFile)
         # ignore the header row
         firstRow = False
         for row in inputRows:
             if(firstRow):
-                rowAsFloats = []
                 # if possible, read in the data as floats (numbers with decimal points) rather than strings
-                for idx, val in enumerate(row):
+                for key, val in enumerate(row):
                     try:
-                        val = float(val)
+                        row[key] = float(val)
                     rowAsFloats.append( val )
                 X.append(row)
             else:
                 headerRow = row
                 firstRow = True
-
-    # con = mdb.connect(host='localhost', user='root', db='learningMachines')
-    # cur = con.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-    # cur.execute('SELECT * FROM random_forest')
-
-    # print 'connected to and about to query db'
-
-    # data = cur.fetchall()
-
-    # print data[0]
 
     allData = []
 
