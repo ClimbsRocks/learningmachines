@@ -28,8 +28,6 @@ with open('titanic.csv', 'rU') as openInputFile:
             headerRow = row
             firstRow = True
 
-print X
-
 # transform:
     # name
     # sex
@@ -46,8 +44,10 @@ print X
 # a common way to format categorical data for machine learning is to turn it into binary values
 # so if we have three categories ('C','Q',and 'S'), we would turn that into something like separate columns for 'embarkedC', 'embarkedQ', and 'embarkedS', with a value of either 0 or 1
 # define your own binarize function here, that will take in categorical data, and turn it into a single binary representation of which category is present for this row
-def binarize(columnName, columnValue):
-    pass
+def binarize(columnName, columnValue, passengerObj):
+    keyName = columnName + columnValue
+    passengerObj[keyName] = 1
+    return passengerObj
 
 cleanedX = []
 # SOLUTION CODE BELOW
@@ -56,10 +56,9 @@ for row in X:
 
     passenger = {}
 
-    if row['Sex'] == 'female':
-        passenger['is_female'] = 1
-    else:
-        passenger['is_male'] = 1
+    binarize('Sex', row['Sex'], passenger)
+    binarize('Embarked', row['Embarked'], passenger)
+    binarize('Pclass', row['Pclass'], passenger)
 
     passenger['Fare'] = row['Fare']
 
@@ -68,3 +67,4 @@ for row in X:
 
     cleanedX.append(passenger)
 # END SOLUTION CODE
+print cleanedX
