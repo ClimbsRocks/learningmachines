@@ -1,8 +1,14 @@
-# import MySQLdb as mdb 
-# import MySQLdb.cursors
+# python uses this "import" syntax to load in external modules, much like node.js uses "require" to load in modules.
+# as with node.js, these modules can be core modules (like fs, or path), or external libraries (underscore, brainjs)
 import sys
 import os.path as path
 import csv
+
+# from ... import is simply a way of specifying a more specific path to find a module to import
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.cross_validation import train_test_split
+
+classifier = RandomForestClassifier(n_jobs=-1)
 
 
 # X is a matrix with the features for our training data (what information we know about each row, without the answers)
@@ -65,6 +71,15 @@ for row in X:
     passenger['Fare'] = row['Fare']
 
 
+
+    # split out our y values (these are the answers we're looking for- in our case, whether this person survived or not)
+    y.append(row['Survived'])
+
     cleanedX.append(passenger)
 # END SOLUTION CODE
 print cleanedX
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2)
+classifier.fit( X_train, y_train )
+print classifier.test( X_test, y_test )
+
