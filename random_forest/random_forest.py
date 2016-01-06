@@ -30,7 +30,7 @@ with open('titanic.csv', 'rU') as openInputFile:
                     row[key] = float(val)
                 except:
                     pass
-                X.append(row)
+            X.append(row)
         else:
             headerRow = row
             firstRow = True
@@ -61,33 +61,22 @@ cleanedX = []
 for row in X:
     # {'Fare': '7.75', 'Name': 'Dooley, Mr. Patrick', 'Embarked': 'Q', 'Age': '32', 'Parch': '0', 'Pclass': '3', 'Sex': 'male', 'Survived': '0', 'SibSp': '0', 'PassengerId': '891', 'Ticket': '370376', 'Cabin': ''}
 
-    # passenger = {}
-
-    # binarize('Sex', row['Sex'], passenger)
-    # binarize('Embarked', row['Embarked'], passenger)
-    # binarize('Pclass', row['Pclass'], passenger)
-
-    # passenger['Fare'] = row['Fare']
-
-
-
 
     # split out our y values (these are the answers we're looking for- in our case, whether this person survived or not)
     y.append(row['Survived'])
-    row['Survived'] = "blank value"
+    del row['Survived']
 
     # TODO: figure out why we keep getting key errors when deleting survived from a row
 
     cleanedX.append(row)
 # END SOLUTION CODE
-print cleanedX
 
 vectorizedX = vectorizer.fit_transform(cleanedX)
 
 X_train, X_test, y_train, y_test = train_test_split(vectorizedX, y, test_size=.2)
 classifier.fit( X_train, y_train )
 
-# NOTE: if your score is really high (say, over 0.8), check to make sure you removed the answer from the information you gave the random forest to train on
-# 
+# NOTE: if your score is really high (say, over 0.85), check to make sure you removed the answer from the information you gave the random forest to train on
+# otherwise it's simply going to learn that the 'Survived' column you fed it is HIGHLY correlated with the answer
 print classifier.score( X_test, y_test )
 
