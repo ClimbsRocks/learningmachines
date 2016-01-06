@@ -7,9 +7,10 @@ import csv
 # from ... import is simply a way of specifying a more specific path to find a module to import
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import train_test_split
+from sklearn.feature_extraction import DictVectorizer
 
 classifier = RandomForestClassifier(n_jobs=-1)
-
+vectorizer = DictVectorizer(sparse=False)
 
 # X is a matrix with the features for our training data (what information we know about each row, without the answers)
 X = []
@@ -60,26 +61,33 @@ cleanedX = []
 for row in X:
     # {'Fare': '7.75', 'Name': 'Dooley, Mr. Patrick', 'Embarked': 'Q', 'Age': '32', 'Parch': '0', 'Pclass': '3', 'Sex': 'male', 'Survived': '0', 'SibSp': '0', 'PassengerId': '891', 'Ticket': '370376', 'Cabin': ''}
 
-    passenger = {}
+    # passenger = {}
 
-    binarize('Sex', row['Sex'], passenger)
-    binarize('Embarked', row['Embarked'], passenger)
-    binarize('Pclass', row['Pclass'], passenger)
+    # binarize('Sex', row['Sex'], passenger)
+    # binarize('Embarked', row['Embarked'], passenger)
+    # binarize('Pclass', row['Pclass'], passenger)
 
-    passenger['Fare'] = row['Fare']
+    # passenger['Fare'] = row['Fare']
 
-    passenger['Fare'] = row['Fare']
 
 
 
     # split out our y values (these are the answers we're looking for- in our case, whether this person survived or not)
     y.append(row['Survived'])
+    row['Survived'] = "blank value"
 
-    cleanedX.append(passenger)
+    # TODO: figure out why we keep getting key errors when deleting survived from a row
+
+    cleanedX.append(row)
 # END SOLUTION CODE
 print cleanedX
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2)
+vectorizedX = vectorizer.fit_transform(cleanedX)
+
+X_train, X_test, y_train, y_test = train_test_split(vectorizedX, y, test_size=.2)
 classifier.fit( X_train, y_train )
-print classifier.test( X_test, y_test )
+
+# NOTE: if your score is really high (say, over 0.8), check to make sure you removed the answer from the information you gave the random forest to train on
+# 
+print classifier.score( X_test, y_test )
 
