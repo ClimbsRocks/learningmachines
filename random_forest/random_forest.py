@@ -25,11 +25,11 @@ with open('titanic.csv', 'rU') as openInputFile:
     for row in inputRows:
         if(firstRow):
             # if possible, read in the data as floats (numbers with decimal points) rather than strings
-            for key in row:
-                try:
-                    row[key] = float(row[key])
-                except:
-                    pass
+            # for key in row:
+            #     try:
+            #         row[key] = float(row[key])
+            #     except:
+            #         pass
             X.append(row)
         else:
             headerRow = row
@@ -58,10 +58,19 @@ for row in X:
     y.append(row['Survived'])
     del row['Survived']
 
-    row['totalConnections'] = row['Parch'] + row['SibSp']
+    row['totalConnections'] = int(row['Parch']) + int(row['SibSp'])
     row = binarize('Pclass', row['Pclass'], row)
     row = binarize('SibSp', row['SibSp'], row)
     row = binarize('Parch', row['Parch'], row)
+    row['Fare'] = float(row['Fare'])
+    try:
+        row['Age'] = float(row['Age'])
+        row['ageMissing'] = 0
+    except:
+        row['ageMissing'] = 1
+        
+    row['SibSp'] = float(row['SibSp'])
+    row['Parch'] = float(row['Parch'])
 
     # if the cabin is known, grab the first letter from it, which might represent something useful like which deck they're on
     try:
