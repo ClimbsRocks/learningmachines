@@ -1,4 +1,3 @@
-var db = require('../db');
 var path = require('path');
 var fs = require('fs');
 var Baby = require('babyparse');
@@ -21,8 +20,10 @@ module.exports = {
           header:true,
           dynamicTyping: true
         }).data;
-        // format that data. see that modular function below
+
+        // format the data. see that modular function below
         var formattedData = module.exports.formatData(rows);
+
         // split the data into a test set (20% of the data) and a training set (80% of the data)
         var training = [];
         var testing = [];
@@ -33,6 +34,7 @@ module.exports = {
             training.push(formattedData[i]);
           }
         }
+
         // pass this formatted data into trainBrain
         module.exports.trainBrain(training, testing);
       }
@@ -49,14 +51,11 @@ module.exports = {
     console.timeEnd('trainBrain');
 
     // now test the results and see how our machine did!
-    module.exports.testBrain(testingData);
+    module.exports.getPredictions(testingData);
   },
 
-  //Test our brain with a given set of testData
-  //Logs the output of default rate at that prediction level
-  testBrain: function(testData) {
-    //console.time gives us the time it takes to complete a task
-    console.time('testBrain');
+  // get predictions from the neural net on expected default likelihood for data we haven't tested it on
+  getPredictions: function(testData) {
     //TODO: Your code here to get the predicted values for each item in our testData
     //Here's what an object in the testData array should look like after you've gotten the predicted result from the net:
       /*
@@ -74,11 +73,17 @@ module.exports = {
         netPrediction: { defaulted: 0.34634397489904356 } }
       */
     // note that the predicted results are stored in a property called netPrediction 
-    // remember, this is an engineering practice. I have written code that expects these objects to adhere to a certain API, following the example above. 
+    // remember, this is an engineering practice. The rest of this code expects these objects to adhere to a certain API, following the example above. 
 
+    module.exports.testBrain(testData);
+  },
+
+  //Test our brain with a given set of testData
+  //Logs the output of default rate at that prediction level
+  testBrain: function(testData) {
 
     // everything below is formatting the output
-    // first we create a results obj with keys labeled 0 to 100
+    // first we create a results obj with keys labeled 0 to 100 in increments of 5
     // eash position in results is an object itself
       // Each position aggregates the count of loans the neural net has predicted have this level of risk
       // and the number of observed defaults at that level of risk
@@ -106,9 +111,7 @@ module.exports = {
     for(var key in results) {
       console.log(key + '- count: ' + results[key].count + ' defaulted: ' + results[key].defaulted + ' Default Rate: ' + Math.round(results[key].defaulted/results[key].count * 100) + '%' );
     }
-    console.timeEnd('testBrain');
 
-    console.log(results);
   },
 
   // neural nets expect to get data that is only between 0 and 1 (or -1 and 1).
@@ -178,7 +181,7 @@ module.exports = {
 
   },
 
-
+  // this still needs to be refactored to read in a file, rather than from the database
   kagglePredict: function(req, res) {
     db.query('SELECT * FROM submission', function(err, response) {
       if(err) {
@@ -216,24 +219,6 @@ module.exports = {
 
       }
     });
-  },
-
-  kaggleTrain: function(req,res) {
-    // grab all the data from the db
-    db.query('SELECT * FROM neuralNet', function(err, response) {
-      if(err) {
-        console.error(err);
-      } else {
-        // for Kaggle, we will train the brain on the entire dataset
-        // just for fun, we'll also "test" it on the entire dataset
-        // because the real test is the submission file. this "test" is just for the fun of having something appear in our console
-        var formattedData = module.exports.formatData(response);
-        var testing = formattedData;
-
-        // pass this formatted data into trainBrain
-        module.exports.trainBrain(formattedData, testing);
-      }
-    });
-  },
+  }
 
 };
