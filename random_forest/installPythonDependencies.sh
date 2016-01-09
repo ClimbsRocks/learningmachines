@@ -1,4 +1,3 @@
-
 # if pip is not installed, install it using the instructions at: https://pip.pypa.io/en/stable/installing/
 wget https://bootstrap.pypa.io/get-pip.py
 python get-pip.py
@@ -13,7 +12,7 @@ pip install cython
 # pip install python-dateutil
 
 
-# once we're working off the latest stable release, we'll be able to install sklearn through pip:
+# install scikit-learn! This is the main repo we'll be working with
 pip install sklearn
 
 # if you want to install the latest scikit-learn development version (at the moment they're working on v0.18, which has a new neural network built in), you can install directly from github using the commands below:
@@ -21,4 +20,3 @@ pip install sklearn
 # cd scikit-learn
 # python setup.py build
 # sudo python setup.py install
-
