@@ -5,18 +5,24 @@ import os.path as path
 import csv
 
 # from ... import is simply a way of specifying a more specific path to find a module to import
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import train_test_split
-from sklearn.feature_extraction import DictVectorizer
 
+# START SOLUTION CODE
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction import DictVectorizer
+# END SOLUTION CODE
+
+# START SOLUTION CODE
 classifier = RandomForestClassifier(n_jobs=-1)
 vectorizer = DictVectorizer(sparse=False)
+# END SOLUTION CODE
 
 # X is a matrix with the features for our training data (what information we know about each row, without the answers)
 X = []
 # y is the answer for each row
 y = []
 
+# read in the kaggle data
 with open('titanic.csv', 'rU') as openInputFile:
     # csv.DictReader will take a csv file, and read it in as an array of python dictionaries (similar to JavaScript objects, or hashes)
     inputRows = csv.DictReader(openInputFile)
@@ -49,16 +55,23 @@ def binarize(columnName, columnValue, passengerObj):
     passengerObj[keyName] = 1
     return passengerObj
 
+# this will hold our data once we've performed data cleaning and feature engineering
 cleanedX = []
-# SOLUTION CODE BELOW
+
 for row in X:
+    # TODO: print out a row so you know what it looks like!
+
+    # START SOLUTION CODE
+    # print row
+    # here is a sample of what a row will look like:
     # {'Fare': '7.75', 'Name': 'Dooley, Mr. Patrick', 'Embarked': 'Q', 'Age': '32', 'Parch': '0', 'Pclass': '3', 'Sex': 'male', 'Survived': '0', 'SibSp': '0', 'PassengerId': '891', 'Ticket': '370376', 'Cabin': ''}
+    # END SOLUTION CODE
 
     # split out our y values (these are the answers we're looking for- in our case, whether this person survived or not)
     y.append(row['Survived'])
     del row['Survived']
 
-    row['totalConnections'] = int(row['Parch']) + int(row['SibSp'])
+    
     row = binarize('Pclass', row['Pclass'], row)
     row = binarize('SibSp', row['SibSp'], row)
     row = binarize('Parch', row['Parch'], row)
@@ -71,6 +84,12 @@ for row in X:
         
     row['SibSp'] = float(row['SibSp'])
     row['Parch'] = float(row['Parch'])
+
+    # TODO: perform some feature engineering of your own! 
+    # one idea: what is this person's total number of connections (siblings and parents)?
+    # START SOLUTION CODE
+    row['totalConnections'] = int(row['Parch']) + int(row['SibSp'])
+    # END SOLUTION CODE
 
     # if the cabin is known, grab the first letter from it, which might represent something useful like which deck they're on
     try:
@@ -86,6 +105,10 @@ for row in X:
 # END SOLUTION CODE
 
 
+# TODO: turn each row into a vector
+# right now, each row is represented as a dictionary (python key-map/hash, the equivalent of an object in JS)
+# but the random forest needs each row to be represented as a vector (a single-dimensional list, or what JavaScript-land would call a flat array)
+# scikit-learn has a module that will turn a list into a dictionary- can you find it?
 vectorizedX = vectorizer.fit_transform(cleanedX)
 
 X_train, X_test, y_train, y_test = train_test_split(vectorizedX, y, test_size=.2)
