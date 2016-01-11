@@ -89,7 +89,6 @@ for row in X:
     # one idea: what is this person's total number of connections (siblings and parents)?
     # START SOLUTION CODE
     row['totalConnections'] = int(row['Parch']) + int(row['SibSp'])
-    # END SOLUTION CODE
 
     # if the cabin is known, grab the first letter from it, which might represent something useful like which deck they're on
     try:
@@ -99,17 +98,18 @@ for row in X:
         row['hasAssignedCabin'] = 0
         pass
     row['TicketFirstChar'] = str(row['Ticket'])[0]
-    # TODO: figure out why we keep getting key errors when deleting survived from a row
+    # END SOLUTION CODE
 
     cleanedX.append(row)
-# END SOLUTION CODE
 
 
 # TODO: turn each row into a vector
 # right now, each row is represented as a dictionary (python key-map/hash, the equivalent of an object in JS)
 # but the random forest needs each row to be represented as a vector (a single-dimensional list, or what JavaScript-land would call a flat array)
 # scikit-learn has a module that will turn a list into a dictionary- can you find it?
+# START SOLUTION CODE
 vectorizedX = vectorizer.fit_transform(cleanedX)
+# END SOLUTION CODE
 
 X_train, X_test, y_train, y_test = train_test_split(vectorizedX, y, test_size=.2)
 classifier.fit( X_train, y_train )
