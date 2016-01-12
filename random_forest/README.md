@@ -22,7 +22,7 @@ Here are the things I expect you to do
 [ ] Run the training data through the random forest
 
 ### Extra Credit
-
+Use RandomizedSearchCV to find the best shape for your random forest!
 
 ### Fantasy Mode
 Make a submission to the kaggle competition!
