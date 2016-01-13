@@ -1,5 +1,11 @@
-# A Conjurer's Introduction to Machine Learning in JavaScript
-> Getting machine learning up and running is similar to picking up other external libraries. Take on these projects and you'll have solved problems using neural networks, random forests, and Support Vector Machines!
+# A Conjurer's Introduction to Machine Learning (in JavaScript!)
+> Getting machine learning up and running is similar to picking up other external libraries. Take on these projects and you'll have solved problems using Neural Networks, Random Forests, and Support Vector Machines!
+
+## Background Research
+Never done machine learning before? You're in the right place! 
+Here's a blog post with my recommended machine learning curriculum to get you up to speed:
+
+
 
 ## PreCourse Steps:
 
