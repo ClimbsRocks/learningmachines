@@ -10,7 +10,7 @@ var net = new brain.NeuralNetwork({
   hiddenLayers:[20,20], //Use the docs to explore various numbers you might want to use here
   learningRate:0.6
 });
-//  END SOLUTION CODE
+// END SOLUTION CODE
 
 module.exports = {
   // this is our main entry point
